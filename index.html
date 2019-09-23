@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>
+      Development Workspace
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      html,
+      body,
+      #apia-board {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+    </style>
+    <!-- Javascript bundle gets inyected right here -->
+  <link href="ApiaBoard.css" rel="stylesheet"><script type="text/javascript" src="ApiaBoard.js"></script></head>
+
+  <body>
+    <div id="controls">
+      <button data-export>Export to console</button>
+      <button data-clear>Clear</button>
+      <button data-import>Import</button>
+    </div>
+
+    <div id="apia-board"></div>
+
+    <script>
+      // Instanciamos nuestra librería
+      const app = new ApiaBoard({
+        container: document.getElementById('apia-board'),
+      });
+
+      // La instanciamos a demanda
+      const board = app.init();
+
+      // Creamos programáticamente unos nodos
+
+      // El primero: StartEventShape
+      const startEvent = board.add.startEvent({
+        position: { x: 100, y: 100 },
+      });
+
+      // Segundo: EndEventShape
+      const endEvent = board.add.endEvent({
+        position: { x: 200, y: 100 },
+      });
+
+      // Los enlazamos con una LinkShape
+      board.add.link({ source: startEvent, target: endEvent });
+
+      // Configuramos controles
+      controls
+        .querySelector('[data-export]')
+        .addEventListener('click', () =>
+          console.log(JSON.stringify(app.export()))
+        );
+      controls
+        .querySelector('[data-clear]')
+        .addEventListener('click', () => app.clear());
+      controls.querySelector('[data-import]').addEventListener('click', () => {
+        const graph = window.prompt('Inserta el grafo:');
+        app.from(JSON.parse(graph));
+      });
+    </script>
+  </body>
+</html>
